@@ -1,0 +1,58 @@
+{
+  "visState": "{
+      \"title\":\"{{ appliance_name -}} Top processes\",
+      \"type\":\"table\",
+      \"params\":{
+        \"perPage\":10,
+        \"showPartialRows\":false,
+        \"showMeticsAtAllLevels\":false
+      },
+      \"aggs\":[
+      {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+        {%- endmacro %}
+        {{ metric(id=1, type='avg', schema='metric',
+                  field='system.process.cpu.total.pct', customLabel='CPU (%)' )}},
+        {{ metric(id=2, type='avg', schema='metric',
+                  field='system.process.memory.rss.pct',
+                  customLabel='Resident Memory' )}},
+        {{ metric(id=4, type='avg', schema='metric',
+                  field='system.process.memory.size',customLabel='Memory' )}},
+        {{ metric(id=5, type='avg', schema='metric',
+                  field='system.process.memory.share',
+                  customLabel='Shared Memory' )}},
+        {{ metric(id=6, type='terms', schema='bucket',
+                  field='system.process.name', size=5, order='desc', orderBy=1,
+                  customLabel='Process' )}}
+      ],
+      \"listeners\":{
+
+      }
+  }",
+
+    "description": "",
+    "title": "{{ appliance_name }} Top processes by CPU",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\"\",
+            \"analyze_wildcard\":true
+          }
+        },
+        \"filter\":[]
+      }"
+    }
+}

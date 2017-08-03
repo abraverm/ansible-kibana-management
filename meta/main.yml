@@ -1,0 +1,10 @@
+galaxy_info:
+  author: Alexander Braverman Masis
+  description: Kibana objects (dashboard, visualization) management
+  license: GPLv3
+  min_ansible_version: 2.0
+  galaxy_tags:
+    - kibana
+  github_branch: master
+dependencies: []
+

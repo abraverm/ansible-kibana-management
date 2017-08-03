@@ -1,0 +1,33 @@
+{
+    "hits": 0,
+    "timeFrom": "now-3d",
+    "timeRestore": true,
+    "description": "",
+    "title": "{{ appliance_name }}",
+    "uiStateJSON": "{}",
+    "panelsJSON": "[
+      {% macro pane(id, index, col, row, size_x, size_y, type='visualization') -%}
+        {
+          \"col\":{{ col }},
+          \"id\":\"{{ id }}\",
+          \"panelIndex\": {{ index }},
+          \"row\": {{ row }},
+          \"size_x\": {{ size_x }},
+          \"size_y\": {{ size_y }},
+          \"type\":\"{{ type }}\"
+        }{%- endmacro %}
+      {{ pane(id=appliance_name+'_cpu', index=1, col=1, row=3, size_x=3, size_y=2) -}},
+      {{ pane(id=appliance_name+'_load', index=2, col=4, row=3, size_x=3, size_y=2) }},
+      {{ pane(id=appliance_name+'_memory', index=3, col=1, row=5, size_x=3, size_y=2) }},
+      {{ pane(id=appliance_name+'_network_traffic', index=4, col=10, row=3, size_x=3, size_y=4) }},
+      {{ pane(id=appliance_name+'_metrics', index=5, col=1, row=1, size_x=12, size_y=2) }},
+      {{ pane(id=appliance_name+'_network_packets', index=6, col=7, row=3, size_x=3, size_y=4) }},
+      {{ pane(id=appliance_name+'_disk-usage', index=7, col=7, row=7, size_x=6, size_y=3) }}
+      ]",
+    "timeTo": "now",
+    "optionsJSON": "{\"darkTheme\":false}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+    }
+}

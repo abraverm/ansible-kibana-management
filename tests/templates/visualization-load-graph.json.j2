@@ -1,0 +1,66 @@
+{
+  "visState": "{
+    \"title\":\"{{ appliance_name }} load-graph\",
+      \"type\":\"line\",
+      \"params\":{
+        \"addLegend\":true,
+        \"addTimeMarker\":false,
+        \"addTooltip\":true,
+        \"defaultYExtents\":false,
+        \"drawLinesBetweenPoints\":true,
+        \"interpolate\":\"linear\",
+        \"radiusRatio\":9,
+        \"scale\":\"linear\",
+        \"setYExtents\":false,
+        \"shareYAxis\":true,
+        \"showCircles\":true,
+        \"smoothLines\":false,
+        \"times\":[],
+        \"yAxis\":{
+
+        }
+      },
+      \"aggs\":[
+      {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+      {%- endmacro %}
+      {{ metric(id=1, customLabel='load 1', field='system.load.1', type='avg',
+                schema='metric') -}},
+      {{ metric(id=2, customLabel='load 5', field='system.load.5', type='avg',
+                schema='metric') -}},
+      {{ metric(id=3, customLabel='load 15', field='system.load.15', type='avg',
+                schema='metric') -}},
+      {{ metric(id=4,field='@timestamp', type='date_histogram', schema='segment',
+                customInterval='2h', interval='m', min_doc_count=1) -}}
+      ],
+      \"listeners\":{
+
+      }
+  }",
+
+    "description": "",
+    "title": "{{ appliance_name }} load-graph",
+    "uiStateJSON": "{\"spy\":{\"mode\":{\"name\":null,\"fill\":false}}}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\"\",
+            \"analyze_wildcard\":true
+          }
+        },
+        \"filter\":[]
+      }"
+    }
+}

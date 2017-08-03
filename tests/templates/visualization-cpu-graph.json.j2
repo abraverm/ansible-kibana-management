@@ -1,0 +1,63 @@
+{
+    "visState": "{
+      \"aggs\":[ 
+      {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+      {%- endmacro %}
+      {{ metric(id=1, customLabel='idle', field='system.cpu.idle.pct',
+                type='avg', schema='metric') -}},
+      {{ metric(id=2, customLabel='sys', field='system.cpu.system.pct',
+                type='avg', schema='metric') -}},
+      {{ metric(id=3, customLabel='user', field='system.cpu.user.pct',
+                type='avg', schema='metric') -}},
+      {{ metric(id=4,field='@timestamp', type='date_histogram', schema='segment',
+                customInterval='2h', interval='m', min_doc_count=1) -}}
+      ],
+      \"listeners\":{},
+      \"params\":{
+        \"addLegend\":true,
+        \"addTimeMarker\":false,
+        \"addTooltip\":true,
+        \"defaultYExtents\":false,
+        \"drawLinesBetweenPoints\":true,
+        \"interpolate\":\"linear\",
+        \"radiusRatio\":9,
+        \"scale\":\"linear\",
+        \"setYExtents\":false,
+        \"shareYAxis\":true,
+        \"showCircles\":true,
+        \"smoothLines\":false,
+        \"times\":[],
+        \"yAxis\":{
+
+        }
+      },
+      \"title\":\"CPU graph\",
+      \"type\":\"line\"
+    }",
+    "title": "{{ appliance_name }} CPU Graph",
+    "uiStateJSON": "{\"spy\":{\"mode\":{\"fill\":false,\"name\":null}}}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"analyze_wildcard\":true,
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\"\"
+          }
+        },
+        \"filter\":[]
+      }"
+
+    }
+}

@@ -1,0 +1,28 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  vars:
+    kibana_visualizations: "templates/visualization-*.json.j2"
+    kibana_dashboards: "templates/dashboard-*.json.j2"
+    appliance_name: h1
+    kibana_index: example
+    appliance_hostname: h1.example.com
+    es_host: localhost
+    es_port: 9200
+    appliances:
+      - h1
+      - h2
+      - h3
+  roles:
+    - ansible-kibana-management
+
+      #  tasks:
+    #- name: upload data
+      #uri:
+        #url: http://127.0.0.1:9200/example/_bulk
+        #method: POST
+        #body: "{{ lookup('file','data.json') }}"
+        #body_format: json
+    #    header: "application/json"
+

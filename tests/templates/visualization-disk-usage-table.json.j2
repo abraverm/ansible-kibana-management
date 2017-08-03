@@ -1,0 +1,56 @@
+{
+  "visState": "{
+      \"title\":\"{{ appliance_name}} disk usage\",
+      \"type\":\"table\",
+      \"params\":{
+        \"perPage\":5,
+        \"showMeticsAtAllLevels\":false,
+        \"showPartialRows\":false
+      },
+      \"aggs\":[
+      {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+      {%- endmacro %}
+      {{ metric(id=1, customLabel='Used (bytes)', field='system.filesystem.used.bytes',
+                type='avg', schema='metric') -}},
+      {{ metric(id=2, customLabel='Disk size', field='system.filesystem.total',
+                type='avg', schema='metric') -}},
+      {{ metric(id=3, customLabel='Used (%)', field='system.filesystem.used.pct',
+                type='avg', schema='metric') -}},
+      {{ metric(id=4, customLabel='Device', field='system.filesystem.device_name.raw',
+                type='terms', schema='bucket', size=5, order='desc', orderBy=3) -}},
+      {{ metric(id=5, customLabel='Mount', field='system.filesystem.mount_point.raw',
+                type='terms', schema='bucket', size=5, order='desc', orderBy=3) -}},
+      ],
+      \"listeners\":{
+
+      }
+  }",
+
+    "description": "",
+    "title": "{{ appliance_name }} disk usage",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\" AND system.filesystem.device_name: \\\"vg\\\"\",
+            \"analyze_wildcard\":true
+          }
+        },
+        \"filter\":[]
+      }"
+
+    }
+}

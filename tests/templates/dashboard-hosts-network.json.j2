@@ -1,0 +1,37 @@
+{
+    "hits": 0,
+    "timeFrom": "now-3d",
+    "timeRestore": true,
+    "description": "",
+    "title": "Hosts Network",
+    "uiStateJSON": "{}",
+    "panelsJSON": "[
+      {% set size_x = 4 -%}
+      {% set size_y = 3 -%}
+      {% set col = 1 -%}
+      {% set row = 1 -%}
+      {% for appliance in appliances %}
+      {
+        \"col\":{{ col }},
+        \"id\":\"{{ appliance }} network-traffic\",
+        \"panelIndex\":{{ loop.index }},
+        \"row\":{{ row }},
+        \"size_x\": {{ size_x }},
+        \"size_y\":{{ size_y }},
+        \"type\":\"visualization\"
+      }{% if loop.index < appliances|length -%},{% endif -%}
+        {% if col+size_x < 10 -%}
+          {% set col = col + size_x -%}
+        {% else -%}
+          {% set col = 1 -%}
+          {% set row = row + size_y -%}
+        {% endif -%}
+      {% endfor -%}
+    ]",
+    "timeTo": "now",
+    "optionsJSON": "{\"darkTheme\":false}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+    }
+}

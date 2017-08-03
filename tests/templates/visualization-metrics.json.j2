@@ -1,0 +1,55 @@
+{
+  "visState": "{
+    \"title\":\"{{ appliance_name}}-metrics\",
+      \"type\":\"metric\",
+      \"params\":{
+        \"handleNoResults\":true,
+        \"fontSize\":\"30\"
+      },
+      \"aggs\":[
+       {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+      {%- endmacro %}
+      {{ metric(id=1, customLabel='Cores', field='system.cpu.cores',
+                schema='metric', type='max') -}},
+      {{ metric(id=2, customLabel='Memory', field='system.memory.total',
+                schema='metric', type='max') -}},
+      {{ metric(id=3, customLabel='average CPU idle', field='system.core.idle.pct',
+                schema='metric', type='avg') -}},
+      {{ metric(id=4, customLabel='average CPU system used',
+                field='system.core.system.pct', schema='metric', type='avg') -}},
+      {{ metric(id=5, customLabel='average CPU user used',
+                field='system.core.user.pct', schema='metric', type='avg') -}},
+      {{ metric(id=6, customLabel='average swap used',
+                field='system.memory.swap.user.pct', schema='metric', type='avg') -}},
+      {{ metric(id=7, customLabel='average memory used',
+                field='system.memory.user.pct', schema='metric', type='avg') -}},
+      ],
+      \"listeners\":{}
+    }",
+    "description": "",
+    "title": "{{ appliance_name }} metrics",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\"\",
+            \"analyze_wildcard\":true
+          }
+        },
+        \"filter\":[]
+      }"
+    }
+}

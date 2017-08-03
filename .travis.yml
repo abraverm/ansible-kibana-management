@@ -1,0 +1,54 @@
+---
+sudo: required
+services:
+  - docker
+
+language: python
+python: "2.7"
+
+env:
+  - ANSIBLE_VERSION=latest
+  - ANSIBLE_VERSION=2.3.0.0
+  - ANSIBLE_VERSION=2.2.3.0
+
+cache: pip
+
+before_install:
+  # Make sure everything's up to date.
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl git python-pip
+  - sudo locale-gen en_US.UTF-8
+  - sudo sysctl -w vm.max_map_count=262144
+  - sudo pip install docker-compose
+  - docker pull sebp/elk
+
+install:
+  # Install Ansible
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible-lint; fi
+
+before_script:
+
+script:
+  - ansible --version
+  - docker version
+  - docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 --name elk -d sebp/elk
+  - sleep 30
+  - docker logs elk
+  - ANSIBLE_CONFIG="tests/ansible.cfg" ansible-playbook -i tests/inventory tests/test.yml
+
+after_script:
+  - docker rm -f elk
+
+after_failure:
+  - ls -la logs/
+  - cat logs/*
+
+after_success:
+  - echo "Success"
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  irc:
+    channels:
+      - "chat.freenode.net#abraverm-ansible-kibana-content"

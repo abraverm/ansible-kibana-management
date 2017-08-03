@@ -1,0 +1,33 @@
+{
+  "visState": "{
+    \"type\":\"timelion\",
+    \"title\":\"{{ appliance_name }} network-packets\",
+    \"params\":{
+      \"expression\":\"(
+        {% macro es(metric, color, label, width, fill, multiply=1) -%}
+          .es(
+            index=\\\"{{ kibana_index -}}\\\"
+            timefield=@timestamp
+            q='beat.hostname: \\\"{{ appliance_hostname -}}\\\" AND
+               system.network.name:\\\"eth0\\\"'
+            metric=\\\"max:{{ metric -}}\\\"
+          ).color({{ color -}}).label(\\\"{{ label -}}\\\").lines(width={{ width -}} fill={{ fill -}}).multiply({{ multiply -}})
+        {%- endmacro -%}
+          {{ es('system.network.out.packets', 'blue', 'outbound packets', 1, 0, -1) -}}
+          {{ es('system.network.in.packets', 'green', 'inbound packets', 1, 0) -}}
+          {{ es('system.network.out.dropped', 'orange', 'outbound dripped', 4, 2) -}}
+          {{ es('system.network.in.dropped', 'orange', 'inbound dripped', 4, 2, -1) -}}
+          {{ es('system.network.out.errors', 'red', 'outbound errors', 4, 2) -}}
+          {{ es('system.network.in.errors', 'red', 'inbound errors', 4, 2, -1) -}}
+        ).title(\\\"{{ appliance_name }} network packets\\\").legend(columns=2 position=nw).derivative()\",
+      \"interval\":\"auto\"
+      }
+    }",
+    "description": "",
+    "title": "{{ appliance_name }} network-packets",
+    "uiStateJSON": "{}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{}"
+    }
+}

@@ -1,0 +1,40 @@
+---
+- debug: var=item
+- set_fact:
+    obj_json: "{{ lookup('template', item) | replace('\n', '') | from_json }}"
+- name: "upload {{ object }}"
+  uri:
+    url: "{{ es }}/{{ object }}/{{ obj_json.title | replace(' ', '_')}}"
+    method: POST
+    body: "{{ obj_json | to_json }}"
+    body_format: json
+    header: "application/json"
+    return_content: yes
+  register: upload
+  failed_when: "upload.json.result not in ['created', 'updated']"
+- pause:
+    seconds: 5
+- name: "verify {{ object }} created for '{{ obj_json.title }}'"
+  uri:
+    url: '{{ es }}/_search?pretty=true'
+    method: GET
+    return_content: yes
+    body: "{
+      \"query\":{
+        \"match\":{
+          \"title\": {
+            \"query\":\"{{ obj_json.title }}\",
+            \"operator\": \"and\"
+            }
+          }
+        }
+      }"
+    body_format: json
+  register: result
+  failed_when: "result.json.hits.total == 0"
+- set_fact:
+    obj_result: "{{ result.json.hits.hits[0]._source }}"
+- name: "{{ obj_json.title }} is not set correctly"
+  fail:
+    msg: "{{ obj_json.title }} is not set correctly"
+  when: obj_json != obj_result

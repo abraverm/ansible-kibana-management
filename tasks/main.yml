@@ -1,0 +1,11 @@
+---
+- set_fact:
+    es: "http://{{ es_host }}:{{ es_port }}/.kibana"
+- name: Visualizations
+  include: kibana_object.yml
+  with_fileglob: "{{ kibana_visualizations }}"
+  object: visualization
+- name: Dashboards
+  include: kibana_object.yml
+  with_fileglob: "{{ kibana_dashboards }}"
+  object: dashboard

@@ -1,0 +1,60 @@
+{
+  "visState": "{
+    \"aggs\":[{
+      {% macro metric(id, field, schema, type) -%}
+       {
+        \"id\":\"{{ id -}}\",
+        \"params\":{
+          \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
+          \"{{ key -}}\": \"{{ value}}\"
+          {% endfor -%}
+        },
+        \"schema\":\"{{ schema -}}\",
+        \"type\":\"{{ type -}}\"
+      }
+      {%- endmacro %}
+      {{ metric(3, customLabel='Used', field='system.memory.used.bytes',
+                schema='metric', type='min')}},
+      {{ metric(2, customLabel='Used', field='@timestamp', schema='setment',
+                type='data_historam', min_doc_count=1, interval='auto',
+                customInterval='2h')}},
+      {{ metric(1, customLabel='Free', field='system.memory.free',
+                schema='metric', type='max')}}
+    ],
+      \"listeners\":{},
+      \"params\":{
+        \"addLegend\":true,
+        \"addTimeMarker\":false,
+        \"addTooltip\":true,
+        \"defaultYExtents\":false,
+        \"interpolate\":\"linear\",
+        \"mode\":\"stacked\",
+        \"scale\":\"linear\",
+        \"setYExtents\":false,
+        \"shareYAxis\":true,
+        \"smoothLines\":true,
+        \"times\":[],
+        \"yAxis\":{
+
+        }
+      },
+      \"title\":\"{{ appliance_name }} memory-graph\",
+      \"type\":\"area\"
+  }",
+    "description": "",
+    "title": "{{ appliance_name }} memory-graph",
+    "uiStateJSON": "{\"spy\":{\"mode\":{\"fill\":false,\"name\":null}}}",
+    "version": 1,
+    "kibanaSavedObjectMeta": {
+      "searchSourceJSON": "{
+        \"index\":\"{{ kibana_index }}\",
+        \"query\":{
+          \"query_string\":{
+            \"analyze_wildcard\":true,
+            \"query\":\"beat.hostname: \\\"{{ appliance_name }}\\\"\"
+          }
+        },
+        \"filter\":[]
+      }"
+    }
+}
