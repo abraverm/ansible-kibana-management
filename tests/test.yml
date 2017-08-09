@@ -16,13 +16,3 @@
       - h3
   roles:
     - ansible-kibana-management
-
-      #  tasks:
-    #- name: upload data
-      #uri:
-        #url: http://127.0.0.1:9200/example/_bulk
-        #method: POST
-        #body: "{{ lookup('file','data.json') }}"
-        #body_format: json
-    #    header: "application/json"
-

@@ -6,5 +6,10 @@ galaxy_info:
   galaxy_tags:
     - kibana
   github_branch: master
+  # should work on any platform
+  platforms:
+    - name: Fedora
+      versions:
+        - 25
 dependencies: []
 
