@@ -3,6 +3,7 @@
   connection: local
   gather_facts: no
   vars:
+    debug: true
     kibana_visualizations: "templates/visualization-*.json.j2"
     kibana_dashboards: "templates/dashboard-*.json.j2"
     appliance_name: h1

@@ -1,7 +1,10 @@
 ---
 - debug: var=item
+  when: debug
 - set_fact:
     obj_json: "{{ lookup('template', item) | replace('\n', '') | from_json }}"
+- debug: var=obj_json
+  when: debug
 - name: "upload {{ object }}"
   uri:
     url: "{{ es }}/{{ object }}/{{ obj_json.title | replace(' ', '_')}}"
@@ -11,7 +14,9 @@
     header: "application/json"
     return_content: yes
   register: upload
-  failed_when: "upload.json.result not in ['created', 'updated']"
+  failed_when: "upload.status not in [200, 201]"
+- debug: var=upload.json
+  when: debug
 - pause:
     seconds: 5
 - name: "verify {{ object }} created for '{{ obj_json.title }}'"
@@ -32,8 +37,12 @@
     body_format: json
   register: result
   failed_when: "result.json.hits.total == 0"
+- debug: var=result.json
+  when: debug
 - set_fact:
     obj_result: "{{ result.json.hits.hits[0]._source }}"
+- debug: var=obj_result
+  when: debug
 - name: "{{ obj_json.title }} is not set correctly"
   fail:
     msg: "{{ obj_json.title }} is not set correctly"
