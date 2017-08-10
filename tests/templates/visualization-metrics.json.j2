@@ -12,7 +12,11 @@
         \"id\":\"{{ id -}}\",
         \"params\":{
           \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
-          \"{{ key -}}\": \"{{ value}}\"
+            {% if value is string -%}
+              \"{{ key -}}\": \"{{ value -}}\"
+            {%- else -%}
+              \"{{ key -}}\": {{ value -}}
+            {% endif -%}
           {% endfor -%}
         },
         \"schema\":\"{{ schema -}}\",
@@ -30,9 +34,9 @@
       {{ metric(id=5, customLabel='average CPU user used',
                 field='system.core.user.pct', schema='metric', type='avg') -}},
       {{ metric(id=6, customLabel='average swap used',
-                field='system.memory.swap.user.pct', schema='metric', type='avg') -}},
+                field='system.memory.swap.used.pct', schema='metric', type='avg') -}},
       {{ metric(id=7, customLabel='average memory used',
-                field='system.memory.user.pct', schema='metric', type='avg') -}},
+                field='system.memory.used.pct', schema='metric', type='avg') -}}
       ],
       \"listeners\":{}
     }",

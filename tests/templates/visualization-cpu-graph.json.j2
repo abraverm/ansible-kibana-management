@@ -6,7 +6,12 @@
         \"id\":\"{{ id -}}\",
         \"params\":{
           \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
-          \"{{ key -}}\": \"{{ value}}\"
+            {% if value is string -%}
+              \"{{ key -}}\": \"{{ value -}}\"
+            {%- else -%}
+              \"{{ key -}}\": {{ value -}}
+            {% endif -%}
+
           {% endfor -%}
         },
         \"schema\":\"{{ schema -}}\",

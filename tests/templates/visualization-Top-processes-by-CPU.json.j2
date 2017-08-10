@@ -3,7 +3,7 @@
       \"title\":\"{{ appliance_name -}} Top processes\",
       \"type\":\"table\",
       \"params\":{
-        \"perPage\":10,
+        \"perPage\":5,
         \"showPartialRows\":false,
         \"showMeticsAtAllLevels\":false
       },
@@ -13,7 +13,11 @@
         \"id\":\"{{ id -}}\",
         \"params\":{
           \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
-          \"{{ key -}}\": \"{{ value}}\"
+            {% if value is string -%}
+              \"{{ key -}}\": \"{{ value -}}\"
+            {%- else -%}
+              \"{{ key -}}\": {{ value -}}
+            {% endif -%}
           {% endfor -%}
         },
         \"schema\":\"{{ schema -}}\",
@@ -31,7 +35,7 @@
                   field='system.process.memory.share',
                   customLabel='Shared Memory' )}},
         {{ metric(id=6, type='terms', schema='bucket',
-                  field='system.process.name', size=5, order='desc', orderBy=1,
+                  field='system.process.name', size=5, order='desc', orderBy='1',
                   customLabel='Process' )}}
       ],
       \"listeners\":{

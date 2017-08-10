@@ -3,20 +3,28 @@
       \"type\":\"timelion\",
         \"title\":\"{{ appliance_name }} network-traffic\",
         \"params\":{
-          \"expression\":\"
-            (
-             .es(index=\\\"{{ kibana_index }}\\\",
-               timefield=@timestamp,
-               q='beat.hostname: \\\"{{ appliance_hostname }}\\\"',
+          \"expression\":\"(
+             .es(
+               index=\\\"{{ kibana_index -}}\\\",
+               q='beat.hostname: \\\"{{ appliance_hostname -}}\\\"',
                metric=\\\"max:system.network.in.bytes\\\"
-               ).divide(1048576).derivative().lines(fill=2 width=1).color(green).label(\\\"Inbound traffic\\\")
-             .es(index=\\\"{{ kibana_index }}\\\",
-               timefield=@timestamp,
-               q='beat.hostname:\\\"{{ appliance_hostname }}\\\"',
-               metric=\\\"max:system.network.out.bytes\\\").divide(1048576).derivative().multiply(-1).label(\\\"out\\\").lines(fill=2,
-               width=1).color(blue).label(\\\"Outbound traffic\\\")
-            ).legend(columns=2, position=nw).title(\\\"{{ appliance_name}} Network traffic (MB/m)\\\")
-            \",
+               ).divide(1048576
+               ).derivative(
+               ).lines(fill=2 width=1
+               ).color(green
+               ).label(\\\"Inbound traffic\\\")
+             .es(
+               index=\\\"{{ kibana_index -}}\\\",
+               q='beat.hostname:\\\"{{ appliance_hostname -}}\\\"',
+               metric=\\\"max:system.network.out.bytes\\\"
+               ).divide(1048576
+               ).derivative(
+               ).multiply(-1
+               ).lines(fill=2, width=1
+               ).color(blue
+               ).label(\\\"Outbound traffic\\\")
+            ).legend(columns=2, position=nw
+            ).title(\\\"{{ appliance_name }} network traffic\\\")\",
           \"interval\":\"auto\"
         }
     }",

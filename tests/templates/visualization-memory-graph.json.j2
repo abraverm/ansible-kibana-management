@@ -1,12 +1,16 @@
 {
   "visState": "{
-    \"aggs\":[{
+    \"aggs\":[
       {% macro metric(id, field, schema, type) -%}
        {
         \"id\":\"{{ id -}}\",
         \"params\":{
           \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
-          \"{{ key -}}\": \"{{ value}}\"
+            {% if value is string -%}
+              \"{{ key -}}\": \"{{ value -}}\"
+            {%- else -%}
+              \"{{ key -}}\": {{ value -}}
+            {% endif -%}
           {% endfor -%}
         },
         \"schema\":\"{{ schema -}}\",
@@ -15,8 +19,8 @@
       {%- endmacro %}
       {{ metric(3, customLabel='Used', field='system.memory.used.bytes',
                 schema='metric', type='min')}},
-      {{ metric(2, customLabel='Used', field='@timestamp', schema='setment',
-                type='data_historam', min_doc_count=1, interval='auto',
+      {{ metric(2, customLabel='Used', field='@timestamp', schema='segment',
+                type='date_histogram', min_doc_count=1, interval='auto',
                 customInterval='2h')}},
       {{ metric(1, customLabel='Free', field='system.memory.free',
                 schema='metric', type='max')}}
@@ -51,7 +55,7 @@
         \"query\":{
           \"query_string\":{
             \"analyze_wildcard\":true,
-            \"query\":\"beat.hostname: \\\"{{ appliance_name }}\\\"\"
+            \"query\":\"beat.hostname: \\\"{{ appliance_hostname }}\\\"\"
           }
         },
         \"filter\":[]

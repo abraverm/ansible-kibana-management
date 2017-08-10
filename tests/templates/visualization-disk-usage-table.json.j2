@@ -13,7 +13,11 @@
         \"id\":\"{{ id -}}\",
         \"params\":{
           \"field\":\"{{ field -}}\"{% for key,value in kwargs.items()-%},
-          \"{{ key -}}\": \"{{ value}}\"
+            {% if value is string -%}
+              \"{{ key -}}\": \"{{ value -}}\"
+            {%- else -%}
+              \"{{ key -}}\": {{ value -}}
+            {% endif -%}
           {% endfor -%}
         },
         \"schema\":\"{{ schema -}}\",
@@ -27,9 +31,9 @@
       {{ metric(id=3, customLabel='Used (%)', field='system.filesystem.used.pct',
                 type='avg', schema='metric') -}},
       {{ metric(id=4, customLabel='Device', field='system.filesystem.device_name.raw',
-                type='terms', schema='bucket', size=5, order='desc', orderBy=3) -}},
+                type='terms', schema='bucket', size=5, order='desc', orderBy='3') -}},
       {{ metric(id=5, customLabel='Mount', field='system.filesystem.mount_point.raw',
-                type='terms', schema='bucket', size=5, order='desc', orderBy=3) -}},
+                type='terms', schema='bucket', size=5, order='desc', orderBy='3') -}}
       ],
       \"listeners\":{
 
