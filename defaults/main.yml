@@ -1,0 +1,6 @@
+---
+kibana_visualizations: []
+kibana_dashboards: []
+es_host: es.example.com
+es_port: 9200
+debug: false

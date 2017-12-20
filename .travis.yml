@@ -32,10 +32,11 @@ before_script:
 script:
   - ansible --version
   - docker version
-  - docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 --name elk -d sebp/elk
+  - docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 --name elk -d sebp/elk:564
   - sleep 30
   - docker logs elk
-  - ANSIBLE_CONFIG="tests/ansible.cfg" ansible-playbook -i tests/inventory tests/test.yml
+  - ANSIBLE_CONFIG="tests/ansible.cfg" ansible-playbook -i tests/inventory tests/default.yml
+  - ANSIBLE_CONFIG="tests/ansible.cfg" ansible-playbook -i tests/inventory tests/no_action.yml
 
 after_script:
   - docker rm -f elk
